@@ -1,4 +1,4 @@
--- Inferno Collection Fire Alarm Version 4.45 BETA
+-- Inferno Collection Fire Alarm Version 4.46 BETA
 --
 -- Copyright (c) 2019, Christopher M, Inferno Collection. All rights reserved.
 --
@@ -84,9 +84,12 @@ FirePanel.Size = Config.PanelSize
 FirePanel.AnnSize = Config.AnnSize
 
 -- When the resource is started, so if the resource is restarted the client respawns the objects
-AddEventHandler("onClientResourceStart", function()
-	-- Request objects from server
-	TriggerServerEvent("Fire-Alarm:GetObjects")
+AddEventHandler("onClientResourceStart", function (ResourceName)
+	-- If the started resource is this resource
+	if(GetCurrentResourceName() == ResourceName) then
+		-- Request objects from server
+		TriggerServerEvent("Fire-Alarm:GetObjects")
+	end
 end)
 
 -- Return of objects
