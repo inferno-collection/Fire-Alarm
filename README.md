@@ -2,7 +2,7 @@
 # Inferno Collection: Fire Alarm
 [![Build Status](https://travis-ci.com/inferno-collection/Fire-Alarm.svg?branch=master)](https://travis-ci.com/inferno-collection/Fire-Alarm)
 
-__Public Beta Version {Version}__
+__Public Beta Version 4.45__
 
 The Fire Alarm resource adds both fire alarms, manual call-points/pull-stations, and fire control pannels into your server. By default, the resource comes with one location, the Mission Row police station, which contains a handfull of call-points, and a control-panel, however, the resource allows and encourages you to add more, though easy to use JSON files.
 
