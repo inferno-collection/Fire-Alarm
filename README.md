@@ -1,4 +1,4 @@
-![channels4_banner|690x114](https://forum.fivem.net/uploads/default/original/3X/d/0/d0fd187ff9cd973629285319cc875f2ba479815f.jpeg) 
+![channels4_banner|690x114](https://i.ibb.co/CHMD8y6/channels4-banner.jpg) 
 # Inferno Collection: Fire Alarm
 [![Build Status](https://travis-ci.com/inferno-collection/Fire-Alarm.svg?branch=master)](https://travis-ci.com/inferno-collection/Fire-Alarm)
 
