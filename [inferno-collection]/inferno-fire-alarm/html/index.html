@@ -1,0 +1,404 @@
+<!--
+Inferno Collection Fire Alarm Version 4.45 BETA
+
+Copyright (c) 2019, Christopher M, Inferno Collection. All rights reserved.
+
+This project is licensed under the following:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to use, copy, modify, and merge the software, under the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. THE SOFTWARE MAY NOT BE SOLD.
+-->
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- Required file for FiveM -->
+		<script src="nui://game/ui/jquery.js"></script>
+		<!-- Panel CSS -->
+		<style>
+			html {
+				display: none;
+			}
+
+			body {
+				overflow: hidden;
+			}
+
+			table {
+				width: 816px;
+				height: 328px;
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				background-image: url("imgs/sysnormal.png");
+				visibility: hidden;
+			}
+
+			td {
+				height: 30px;
+				font-weight: bold;
+			}
+
+			button {
+				width: 100%;
+				opacity: 0.0;
+			}
+
+			.power-led {
+				height: 44%;
+				width: 14%;
+				right: -354.5%;
+				bottom: 191%;
+				position: relative;
+				background-color: #00FF00;
+				border-radius: 50%;
+				box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(0, 255, 0, 0.5) 0 2px 12px;
+				visibility: visible;
+			}
+
+			.fire-led {
+				height: 44%;
+				width: 15%;
+				right: -135.5%;
+				bottom: -34%;
+				position: relative;
+				background-color: #F00;
+				border-radius: 50%;
+				box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 12px;
+				animation: flashRed 1s infinite;
+				visibility: hidden;
+			}
+
+			@keyframes flashRed {
+				from {
+					background-color: #F00;
+				}
+
+				50% {
+					background-color: #A00;
+					box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 15px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 0 0;
+				}
+
+				to {
+					background-color: #F00;
+				}
+			}
+		</style>
+	</head>
+
+	<body>
+		<table id="panel">
+			<tbody>
+				<tr></tr>
+				<tr>
+					<td><button id="1" onclick="ButtonClick(this.id)" style="
+						width: 24%;
+						height: 101%;
+						right: -392%;
+						bottom: 34%;
+						position: relative;
+						visibility: visible;
+						border-radius: 39%;
+					">1</button></td>
+					<td><button id="2" onclick="ButtonClick(this.id)" style="
+						width: 25%;
+						height: 101%;
+						right: -344.5%;
+						bottom: 34%;
+						position: relative;
+						visibility: visible;
+						border-radius: 39%;
+					">2</button></td>
+					<td><button id="3" onclick="ButtonClick(this.id)" style="
+						width: 28%;
+						height: 106%;
+						right: -313%;
+						bottom: 34%;
+						position: relative;
+						visibility: visible;
+						border-radius: 39%;
+					">3</button></td>
+				</tr>
+				<tr>
+					<td><button id="4" onclick="ButtonClick(this.id)" style="
+						width: 24%;
+						height: 105%;
+						right: -392%;
+						bottom: 6%;
+						position: relative;
+						visibility: visible;
+						border-radius: 39%;
+					">4</button></td>
+					<td><button id="5" onclick="ButtonClick(this.id)" style="
+						width: 26%;
+						height: 105%;
+						right: -344%;
+						bottom: 6%;
+						position: relative;
+						visibility: visible;
+						border-radius: 39%;
+					">5</button></td>
+					<td><button id="6" onclick="ButtonClick(this.id)" style="
+						width: 28%;
+						height: 105%;
+						right: -313%;
+						bottom: 6%;
+						position: relative;
+						visibility: visible;
+						border-radius: 39%;
+					">6</button></td>
+				</tr>
+				<tr>
+					<td>
+						<div id="fire-led" class="fire-led"></div>
+					</td>
+					<td><button id="7" onclick="ButtonClick(this.id)" style="
+						width: 26%;
+						height: 106%;
+						right: -310%;
+						bottom: -24%;
+						position: relative;
+						visibility: visible;
+						border-radius: 39%;
+					">7</button></td>
+					<td><button id="8" onclick="ButtonClick(this.id)" style="
+						width: 29%;
+						height: 106%;
+						right: -274%;
+						bottom: -24%;
+						position: relative;
+						visibility: visible;
+						border-radius: 39%;
+					">8</button></td>
+					<td><button id="9" onclick="ButtonClick(this.id)" style="
+						width: 29%;
+						height: 106%;
+						right: -218%;
+						bottom: -24%;
+						position: relative;
+						visibility: visible;
+						border-radius: 39%;
+					">9</button></td>
+				</tr>
+				<tr>
+					<td><button id="ack1" onclick="ButtonClick(this.id)" style="
+						width: 29%;
+						height: 158%;
+						right: -129%;
+						bottom: -34%;
+						position: relative;
+						visibility: visible;
+						border-radius: 39%;
+					">ACK1</button></td>
+					<td><button id="ack2" onclick="ButtonClick(this.id)" style="
+						width: 31%;
+						height: 158%;
+						right: -71%;
+						bottom: -34%;
+						position: relative;
+						visibility: visible;
+						border-radius: 39%;
+					">ACK2</button></td>
+					<td><button id="sil" onclick="ButtonClick(this.id)" style="
+						width: 37%;
+						height: 158%;
+						right: -128%;
+						bottom: -34%;
+						position: relative;
+						visibility: visible;
+						border-radius: 39%;
+					">SIL</button></td>
+					<td><button id="res" onclick="ButtonClick(this.id)" style="
+						width: 37%;
+						height: 158%;
+						right: -80%;
+						bottom: -34%;
+						position: relative;
+						visibility: visible;
+						border-radius: 39%;
+					">RES</button></td>
+					<td><button id="0" onclick="ButtonClick(this.id)" style="
+						width: 55%;
+						height: 106%;
+						right: -134%;
+						bottom: -55%;
+						position: relative;
+						visibility: visible;
+						border-radius: 39%;
+					">0</button></td>
+					<td><button id="del" onclick="ButtonClick(this.id)" style="
+						width: 30%;
+						height: 106%;
+						right: -59%;
+						bottom: -55%;
+						position: relative;
+						visibility: visible;
+						border-radius: 39%;
+					">DEL</button></td>
+				</tr>
+				<tr>
+					<td>
+						<div class="power-led"></div>
+					</td>
+				</tr>
+				<tr>
+					<td><button id="prev" onclick="ButtonClick(this.id)" style="
+						width: 29%;
+						height: 122%;
+						right: -331%;
+						bottom: -41%;
+						position: relative;
+						visibility: visible;
+						border-top-left-radius: 55%;
+						border-top-right-radius: 55%;
+					">PREV</button></td>
+					<td><button id="next" onclick="ButtonClick(this.id)" style="
+						width: 31%;
+						height: 128%;
+						right: -245%;
+						bottom: -154%;
+						position: relative;
+						visibility: visible;
+						border-bottom-left-radius: 55%;
+						border-bottom-right-radius: 55%;
+					">NEXT</button></td>
+					<td><button id="exit" onclick="ButtonClick(this.id)" style="
+						width: 28%;
+						height: 113%;
+						right: -312.5%;
+						bottom: 23%;
+						position: relative;
+						visibility: visible;
+						border-radius: 39%;
+					">EXIT</button></td>
+					<td><button id="ent" onclick="ButtonClick(this.id)" style="
+						width: 28%;
+						height: 113%;
+						right: -177.5%;
+						bottom: 23%;
+						position: relative;
+						visibility: visible;
+						border-radius: 39%;
+					">ENT</button></td>
+				</tr>
+				<tr>
+					<td><button id="menu" onclick="ButtonClick(this.id)" style="
+						width: 21%;
+						height: 123%;
+						right: -302.5%;
+						bottom: 8%;
+						position: relative;
+						visibility: visible;
+						border-radius: 39%;
+					">MENU</button></td>
+				</tr>
+				<tr></tr>
+				<tr></tr>
+			</tbody>
+		</table>
+
+		<script>
+			$(function () {
+				// Initialize audio player variables
+				var FireAlarm = null;
+				var SounderAlarm = null;
+				var Ann = null;
+				// Wait to receive a message 
+				window.addEventListener("message", function (event) {
+					// If client wants to play alarm
+					if (event.data.PayloadType == "PlayAlarm") {
+						// Create a new player, load alarm file
+						FireAlarm = new Audio("./sounds/alarm.mp3");
+						// Set volume 0, assuming it will be updated in the next few frames
+						FireAlarm.volume = 0.0;
+						// Play alarm
+						FireAlarm.play();
+					// If client wants alarm volume updated
+					} else if (event.data.PayloadType == "SetAlarmVolume") {
+						// If there is currently an alarm playing
+						if (FireAlarm != null) {
+							// Update alarm volume
+							FireAlarm.volume = event.data.Payload;
+						}
+					// If client wants sounder played
+					} else if (event.data.PayloadType == "PlaySounder") {
+						// Create a new player, load sounder file
+						SounderAlarm = new Audio("./sounds/panelsounder.ogg");
+						// Set volume 0, assuming it will be updated in the next few frames
+						SounderAlarm.volume = 0.0;
+						// Play sounder
+						SounderAlarm.play();
+					// If client wants sounder volume updated
+					} else if (event.data.PayloadType == "SetSounderVolume") {
+						// If there is currently a sounder playing
+						if (SounderAlarm != null) {
+							// Update sounder volume
+							SounderAlarm.volume = event.data.Payload;
+						}
+					// If client wants test played
+					} else if (event.data.PayloadType == "PlayAnn") {
+						// Create a new player, load test file
+						Ann = new Audio("./sounds/test.ogg");
+						// Set volume 0, assuming it will be updated in the next few frames
+						Ann.volume = 0.0;
+						// Play test
+						Ann.play();
+					// If client wants clear played
+					} else if (event.data.PayloadType == "PlayClear") {
+						// Create a new player, load clear file
+						Ann = new Audio("./sounds/all_clear.ogg");
+						// Set volume 0, assuming it will be updated in the next few frames
+						Ann.volume = 0.0;
+						// Play clear
+						Ann.play();
+					// If client wants test or clear volume updated
+					} else if (event.data.PayloadType == "SetAnnVolume") {
+						// If there is currently a test or clear playing
+						if (Ann != null) {
+							// Set test/clear volume
+							Ann.volume = event.data.Payload;
+						}
+					// If client wants a panel opened
+					} else if (event.data.PayloadType == "OpenPanel") {
+						// Make panel visable
+						document.documentElement.style.display = "block";
+						var x = document.getElementById("panel");
+						x.setAttribute("style", "background-image: url(imgs/" + event.data.Payload + ".png); visibility: visible;");
+						document.body.appendChild(x);
+						// If panel requires fire led active
+						if (event.data.Payload == "ack1" || event.data.Payload == "fire" || event.data.Payload == "gack" || event.data.Payload == "sil") {
+							$("#fire-led").css({ "visibility": "visible" });
+						// If panel does not require fire led active
+						} else {
+							$("#fire-led").css({ "visibility": "hidden" });
+						}
+					// If client wants a panel closed
+					} else if (event.data.PayloadType == "ClosePanel") {
+						// Make panel invisible
+						document.documentElement.style.display = "none";
+						var x = document.getElementById("panel");
+						x.setAttribute("style", "visibility: hidden;");
+						document.body.appendChild(x);
+						$("#fire-led").css({ "visibility": "hidden" });
+					}
+				});
+
+				// When client presses any button on keyboard
+				document.onkeyup = function (data) {
+					// If client presses Escape key
+					if (data.which == 27) {
+						// Send callback to close panel
+						$.post("http://inferno-fire-alarm/ClosePanel");
+					}
+				};
+			});
+
+			// When client clicks on a panel button
+			function ButtonClick(ID) {
+				// Send call back
+				$.post('http://inferno-fire-alarm/Button', JSON.stringify(ID));
+			}
+		</script>
+	</body>
+</html>

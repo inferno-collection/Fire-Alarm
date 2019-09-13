@@ -1,0 +1,13 @@
+[
+    {
+        "ID"        :   1,
+        "Prop"      :   "prop_elecbox_13",
+        "x"         :   465.45,
+        "y"         :   -985.3,
+        "z"         :   24.5,
+        "rx"        :   0,
+        "ry"        :   0,
+        "rz"        :   270,
+		"_comment"  :   "Mission Row: Located near cells downstairs"
+    }
+]
