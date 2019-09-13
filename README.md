@@ -1,4 +1,4 @@
-![channels4_banner|690x114](https://forum.fivem.net/uploads/default/original/3X/d/0/d0fd187ff9cd973629285319cc875f2ba479815f.jpeg) 
+![channels4_banner|690x114](https://i.ibb.co/CHMD8y6/channels4-banner.jpg) 
 # Inferno Collection: Fire Alarm
 [![Build Status](https://travis-ci.com/inferno-collection/Fire-Alarm.svg?branch=master)](https://travis-ci.com/inferno-collection/Fire-Alarm)
 
@@ -16,7 +16,7 @@ Presently, the following can be customized:
 
 ***
 ### Development Showcase Video
-Coming soon.
+[![Watch the Development Showcase video](https://img.youtube.com/vi/UQ35mOiGYq4/maxresdefault.jpg)](https://www.youtube.com/watch?v=UQ35mOiGYq4)
 ***
 ### Installation Video
 Coming soon.
@@ -28,10 +28,12 @@ https://github.com/inferno-collection/Fire-Alarm/releases
 
 > Pictures
 
-Coming soon.
+![image|236x74](https://i.ibb.co/KVCny6c/locked.png)
+
+![image|236x74](https://i.ibb.co/2jT45jn/c49d1ae6537ddfc0cf352cdaa22302bc7c3e77fc-2-690x277.png)
 
 ***
-Check out the Wiki for an [installation guide](https://github.com/inferno-collection/Fire-Alarm/wiki), as well as to find out how to use the resource.
+Check out the Wiki for an [installation guide](https://github.com/inferno-collection/Fire-Alarm/wiki/Installation-Guide), as well as to find out how to use the resource.
 
 If you have any troubles, suggestions, feedback, etc, please [check the Wiki](https://github.com/inferno-collection/Fire-Alarm/wiki) and/or [create a new issue](https://github.com/inferno-collection/Fire-Alarm/issues/new) on GitHub.
 
