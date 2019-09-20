@@ -1,4 +1,4 @@
--- Inferno Collection Fire Alarm Version 4.46 BETA
+-- Inferno Collection Fire Alarm Version 4.5 BETA
 --
 -- Copyright (c) 2019, Christopher M, Inferno Collection. All rights reserved.
 --
@@ -16,9 +16,9 @@
 -- PLEASE RESTART SERVER AFTER MAKING CHANGES TO THIS CONFIGURATION
 --
 local Config = {} -- Do not edit this line
--- The code required to access all fire panels
+-- The code used for a panel when one is not set, or set correctly, in the JSON file.
 -- Must be EXACTLY 4 numbers, in STRING form
-Config.FireCode = "1234"
+Config.DefaultPasscode = "1234"
 
 --
 --		Nothing past this point needs to be edited, all the settings for the resource are found ABOVE this line.
@@ -48,6 +48,23 @@ if Server.Data then
 			Panel.CurrentScreen = "locked"
 			-- Add empty current code
 			Panel.CurrentCode = {}
+			-- Check if a passcode is set
+			if Panel.Passcode then
+				-- Ensure it is in string form, as some people will inevitably
+				-- put it in a int form in the JSON file
+				Panel.Passcode = tostring(Panel.Passcode)
+			-- If one is not set
+			else
+				-- Set passcode to default passcode
+				Panel.Passcode = Config.DefaultPasscode
+				-- Print error message to server console
+				print("===================================================================")
+				print("==============================WARNING==============================")
+				print("Control Panel number " .. Panel.ID .. " for Inferno-Fire-Alarm does not have")
+				print("a valid passcode set, the default passcode (" .. Config.DefaultPasscode .. ") has")
+				print("been applied to it instead - This is non-fatal warn.")
+				print("===================================================================")
+			end
 		end
 	end
 end
@@ -169,8 +186,8 @@ RegisterServerEvent("Fire-Panel:CheckCode")
 AddEventHandler("Fire-Panel:CheckCode", function(CP)
 	-- Temporary variable
 	local Success = false
-	-- If the entered code equals the server code
-	if table.concat(Server.ControlPanels[CP].CurrentCode, "") == Config.FireCode then
+	-- If the entered code equals the panel's code
+	if table.concat(Server.ControlPanels[CP].CurrentCode, "") == Server.ControlPanels[CP].Passcode then
 		-- Update temporary variable
 		Success = true
 	end

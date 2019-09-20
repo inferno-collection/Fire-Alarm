@@ -8,6 +8,11 @@
         "rx"        :   0,
         "ry"        :   0,
         "rz"        :   270,
+        "Passcode"  :   "1234",
+        "AlarmTones":   [
+            "fire",
+            "rescue"
+        ],
 		"_comment"  :   "Mission Row: Located near cells downstairs"
     }
 ]

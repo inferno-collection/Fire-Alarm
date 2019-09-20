@@ -1,4 +1,4 @@
--- Inferno Collection Fire Alarm Version 4.46 BETA
+-- Inferno Collection Fire Alarm Version 4.5 BETA
 --
 -- Copyright (c) 2019, Christopher M, Inferno Collection. All rights reserved.
 --
@@ -16,6 +16,12 @@
 -- PLEASE RESTART SERVER AFTER MAKING CHANGES TO THIS CONFIGURATION
 --
 local Config = {} -- Do not edit this line
+-- Whether or not to enable Fire/EMS Pager Intergration
+-- Requires https://github.com/inferno-collection/Fire-EMS-Pager
+Config.EnablePager = true
+-- Assuming pager intergration enabled, which tones should be paged when
+-- alarm activated, if none are defined in the JSON file entry
+Config.DefaultAlarmTones = {"fire"}
 -- The size around the source the alarm can be heard.
 -- Alarm gets quieter the further from the origin, so the
 -- number below is the further spot it will be able to be heard from
@@ -247,7 +253,25 @@ AddEventHandler("Fire-Panel:Return:OpenPanel", function(Panel)
 		PayloadType	= "OpenPanel",
 		-- Tell NUI which screen specifically
         Payload		= FirePanel.CurrentScreen
-    })
+	})
+
+	-- If animation dictionary not loaded
+	if not HasAnimDictLoaded("anim@amb@trailer@touch_screen@") then
+		-- Load animation Dictionary
+		RequestAnimDict("anim@amb@trailer@touch_screen@")
+		-- While the dictionary is not loaded
+		while not HasAnimDictLoaded("anim@amb@trailer@touch_screen@") do
+			-- Wait
+			Citizen.Wait(0)
+		end
+	end
+
+	-- Player's Ped
+	local PlayerPed = PlayerPedId()
+	-- Make player face the panel
+	TaskTurnPedToFaceCoord(PlayerPed, Panel.x, Panel.y, Panel.z, 0)
+	-- Player panel interaction animation
+	TaskPlayAnim(PlayerPed, "anim@amb@trailer@touch_screen@", "idle_c", 8.0, -8, 0.01, 49, 0, 0, 0, 0)
 end)
 
 -- Play an annoucement from a panel
@@ -567,6 +591,9 @@ RegisterNUICallback("ClosePanel", function()
 	})
 	-- Take NUI out of focus
 	SetNuiFocus(false, false)
+
+	-- Stop panel animation
+	StopAnimTask(PlayerPedId(), "anim@amb@trailer@touch_screen@", "idle_c", 1.0)
 end)
 
 -- Add code to entered codes
@@ -693,10 +720,65 @@ Citizen.CreateThread(function()
 					local Distance = Vdist(PP.x, PP.y, PP.z, CP.x, CP.y, CP.z)
 					-- If player is very close to call point
 					if Distance <= 1.5 then
-						-- Send call point to server
-						TriggerServerEvent("Fire-Alarm:SetPulled", CallPoint)
 						-- Set point to pulled to avoid setting twice
 						CallPoint.Pulled = true
+
+						-- If animation dictionary not loaded
+						if not HasAnimDictLoaded("anim@mp_radio@low_apment") then
+							-- Load animation Dictionary
+							RequestAnimDict("anim@mp_radio@low_apment")
+							-- While the dictionary is not loaded
+							while not HasAnimDictLoaded("anim@mp_radio@low_apment") do
+								-- Wait
+								Citizen.Wait(0)
+							end
+						end
+
+						-- Player Ped
+						local PlayerPed = PlayerPedId()
+						-- Fire panel connect to call point
+						local Panel = FirePanel.ControlPanels[CallPoint.Control]
+						-- Make player face the panel
+						TaskTurnPedToFaceCoord(PlayerPed, CallPoint.x, CallPoint.y, CallPoint.z, 0)
+						-- Allow time to face call point
+						Citizen.Wait(500)
+						-- Player call point interaction animation
+						TaskPlayAnim(PlayerPed, "anim@mp_radio@low_apment", "button_press_kitchen", 8.0, -8, 0.01, 49, 0, 0, 0, 0)
+						-- Allow time to press button
+						Citizen.Wait(500)
+						-- Stop call point animation
+						StopAnimTask(PlayerPed, "anim@mp_radio@low_apment", "button_press_kitchen", 1.0)
+						-- Send call point to server
+						TriggerServerEvent("Fire-Alarm:SetPulled", CallPoint)
+						-- If pager intergation enabled
+						if Config.EnablePager then
+							-- Get nearest street and cross street to control panel
+							local Street, CrossStreet = GetStreetNameAtCoord(Panel.x, Panel.y, Panel.z)
+							-- Initialise details array
+							local DetailsArray = {}
+							-- Initialise details variable
+							local Details
+							-- If there is a cross street
+							if CrossStreet ~= 0 then
+								-- Set details
+								Details = "Box Alarm - " .. GetStreetNameFromHashKey(Street) .. " X " .. GetStreetNameFromHashKey(CrossStreet)
+							-- If there is not cross street
+							else
+								-- Set details
+								Details = "Box Alarm - " .. GetStreetNameFromHashKey(Street)
+							end
+							-- Turn each word in the details variable into an array entry
+							for w in Details:gmatch("%S+") do table.insert(DetailsArray, w) end
+							-- If the panel has tones predefined
+							if Panel.AlarmTones then
+								-- Send message to pager resource
+								TriggerServerEvent("Fire-EMS-Pager:PageTones", Panel.AlarmTones, true, DetailsArray)
+							-- If panel does not have predefined tones
+							else
+								-- Send message to pager resource
+								TriggerServerEvent("Fire-EMS-Pager:PageTones", Config.DefaultAlarmTones, true, DetailsArray)
+							end
+						end
 					end
 				end
 			end
@@ -801,5 +883,6 @@ Citizen.CreateThread(function()
 				end
 			end
 		end
+
 	end
 end)

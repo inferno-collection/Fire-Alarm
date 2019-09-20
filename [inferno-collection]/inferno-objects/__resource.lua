@@ -1,4 +1,4 @@
--- Inferno Collection Fire Alarm Version 4.46 BETA
+-- Inferno Collection Fire Alarm Version 4.5 BETA
 --
 -- Copyright (c) 2019, Christopher M, Inferno Collection. All rights reserved.
 --
