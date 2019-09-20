@@ -2,7 +2,7 @@
 # Inferno Collection: Fire Alarm
 [![Build Status](https://travis-ci.com/inferno-collection/Fire-Alarm.svg?branch=master)](https://travis-ci.com/inferno-collection/Fire-Alarm)
 
-__Public Beta Version 4.46__
+__Public Beta Version 4.5__
 
 The Fire Alarm resource adds both fire alarms, manual call-points/pull-stations, and fire control pannels into your server. By default, the resource comes with one location, the Mission Row police station, which contains a handfull of call-points, and a control-panel, however, the resource allows and encourages you to add more, though easy to use JSON files.
 
@@ -11,8 +11,9 @@ The call-points and control panel consist of non-networked objects, with each co
 Presently, the following can be customized:
 - Location of manual call-points and control panels.
 - Number of call-points per control pannel.
-- Passcode required to access control panels.
+- Per-panel passcodes for each control-panel.
 - The area within which the alarm can be heard once sounded.
+- [Fire/EMS Pager](https://github.com/inferno-collection/Fire-EMS-Pager) intergration, allowing you to page per-panel tones when an alarm is activated.
 
 ***
 ### Development Showcase Video
