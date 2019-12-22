@@ -8,7 +8,7 @@
         "rx"        :   0,
         "ry"        :   0,
         "rz"        :   270,
-        "Passcode"  :   "1234",
+        "Passcode"  :   "333",
         "AlarmTones":   [
             "fire",
             "rescue"

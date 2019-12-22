@@ -1,4 +1,4 @@
--- Inferno Collection Fire Alarm Version 4.5 BETA
+-- Inferno Collection Fire Alarm Version 4.6 ALPHA
 --
 -- Copyright (c) 2019, Christopher M, Inferno Collection. All rights reserved.
 --
@@ -17,8 +17,8 @@
 --
 local Config = {} -- Do not edit this line
 -- The code used for a panel when one is not set, or set correctly, in the JSON file.
--- Must be EXACTLY 4 numbers, in STRING form
-Config.DefaultPasscode = "1234"
+-- Must be EXACTLY 3 numbers, in STRING form
+Config.DefaultPasscode = "333"
 
 --
 --		Nothing past this point needs to be edited, all the settings for the resource are found ABOVE this line.
@@ -26,28 +26,26 @@ Config.DefaultPasscode = "1234"
 --
 
 -- Server variables
+local Data
 local Server = {}
--- Call points
 Server.CallPoints = {}
--- Control panels
 Server.ControlPanels = {}
--- JSON data
-Server.Data = false
 
 -- Load data from control panel JSON file
-Server.Data = LoadResourceFile(GetCurrentResourceName(), "control-panels.json")
+Data = LoadResourceFile(GetCurrentResourceName(), "control-panels.json")
 -- If able to load and read file
-if Server.Data then
-	-- Update server values with JSON file values
-	Server.ControlPanels = json.decode(Server.Data)
-	-- If data transferred correctly
+if Data then
+	Server.ControlPanels = json.decode(Data)
 	if Server.ControlPanels then
-		-- Loop though all control panels
 		for _, Panel in ipairs(Server.ControlPanels) do
-			-- Add default screen
-			Panel.CurrentScreen = "locked"
-			-- Add empty current code
+			Panel.Active = false
+			Panel.ActiveLoc = false
+			Panel.AnnActive = false
+			Panel.WalkAround = false
+			Panel.CurrentScreen = "sysnormal"
 			Panel.CurrentCode = {}
+			Panel.ScreenText = {nil, nil}
+			Panel.AccessLevel = 1
 			-- Check if a passcode is set
 			if Panel.Passcode then
 				-- Ensure it is in string form, as some people will inevitably
@@ -57,7 +55,6 @@ if Server.Data then
 			else
 				-- Set passcode to default passcode
 				Panel.Passcode = Config.DefaultPasscode
-				-- Print error message to server console
 				print("===================================================================")
 				print("==============================WARNING==============================")
 				print("Control Panel number " .. Panel.ID .. " for Inferno-Fire-Alarm does not have")
@@ -70,8 +67,7 @@ if Server.Data then
 end
 
 -- If unable to load JSON file or file data
-if not Server.Data or not Server.ControlPanels then
-	-- Print error message to server console
+if not Data or not Server.ControlPanels then
 	print("===================================================================")
 	print("==============================WARNING==============================")
 	print("Unable to load control-panels.json file for Inferno-Fire-Alarm. The")
@@ -80,25 +76,24 @@ if not Server.Data or not Server.ControlPanels then
 	print("===================================================================")
 end
 
--- Load data from control panel JSON file
-Server.Data = LoadResourceFile(GetCurrentResourceName(), "call-points.json")
+-- Load data from call point JSON file
+Data = LoadResourceFile(GetCurrentResourceName(), "call-points.json")
 -- If able to load and read file
-if Server.Data then
-	-- Update server values with JSON file values
-	Server.CallPoints = json.decode(Server.Data)
-	-- If data transferred correctly
+if Data then
+	Server.CallPoints = json.decode(Data)
 	if Server.CallPoints then
-		-- Loop though all call points
-		for _, Point in ipairs(Server.CallPoints) do
-			-- Add default pull state
-			Point.Pulled = false
+		for _, Channel in ipairs(Server.CallPoints) do
+			for _, Point in ipairs(Channel.Devices) do
+				Point.Pulled = false
+				Point.Control = Channel.Control
+				Point.Channel = Channel.Channel
+			end
 		end
 	end
 end
 
 -- If unable to load JSON file or file data
-if not Server.Data or not Server.CallPoints then
-	-- Print error message to server console
+if not Data or not Server.CallPoints then
 	print("===================================================================")
 	print("==============================WARNING==============================")
 	print("Unable to load call-points.json file for Inferno-Fire-Alarm. The re")
@@ -111,119 +106,167 @@ end
 RegisterServerEvent("Fire-Alarm:GetObjects")
 AddEventHandler("Fire-Alarm:GetObjects", function()
 	-- Provide client with call point and control panel data
-	TriggerClientEvent("Fire-Alarm:Return:GetObjects", source, {Server.CallPoints, Server.ControlPanels})
+	TriggerClientEvent("Fire-Alarm:Return:GetObjects", source, Server.CallPoints, Server.ControlPanels)
 end)
 
 -- Set a pull station pulled
 RegisterServerEvent("Fire-Alarm:SetPulled")
-AddEventHandler("Fire-Alarm:SetPulled", function(CP)
-	-- Loop through all call points
-	for _, Point in ipairs(Server.CallPoints) do
-		-- If call point belongs to the same control panel as the pulled call point
-		if Point.Control == CP.Control then
-			-- Set all pulled, this stops two alarms going off at one time
-			Point.Pulled = true
+AddEventHandler("Fire-Alarm:SetPulled", function(CallPoint)
+	Server.ControlPanels[CallPoint.Control].Active = true
+	Server.ControlPanels[CallPoint.Control].ActiveLoc = CallPoint.Location
+
+	for _, Channel in ipairs(Server.CallPoints) do
+		for _, Point in ipairs(Channel.Devices) do
+			-- If call point belongs to the same control panel as the pulled call point
+			if Point.Control == CallPoint.Control then
+				-- Set all pulled, this stops two alarms going off at one time
+				Point.Pulled = true
+			end
 		end
 	end
 
-	-- Update client values
-	TriggerClientEvent("Fire-Alarm:Bouce:UpdateCallPoints", -1, Server.CallPoints)
-	-- Update server value
-	TriggerEvent("Fire-Panel:SetScreen", CP.Control, "fire")
-	-- Inform all clients alarm is active
-	TriggerClientEvent("Fire-Alarm:Return:SetPulled", -1, CP)
-	-- Inform all clients sounder is active
-	TriggerClientEvent("Fire-Panel:Return:SoundPanel", -1, Server.ControlPanels[CP.Control])
+	TriggerClientEvent("Fire-Alarm:Bouce:UpdateValues", -1, Server)
+	TriggerEvent("Fire-Panel:SetScreen", CallPoint.Control, "fire", {nil, nil})
+	TriggerClientEvent("Fire-Alarm:Return:SetPulled", -1, CallPoint)
 end)
 
--- Reset all Pull Stations
+-- Start walk around for call point
+RegisterServerEvent("Fire-Alarm:WalkAround")
+AddEventHandler("Fire-Alarm:WalkAround", function(CallPoint)
+	Server.ControlPanels[CallPoint.Control].Active = true
+
+	for _, Channel in ipairs(Server.CallPoints) do
+		for _, Point in ipairs(Channel.Devices) do
+			-- If call point belongs to the same control panel as the pulled call point
+			if Point.Control == CallPoint.Control then
+				-- Set all pulled, this stops two alarms going off at one time
+				Point.Pulled = true
+			end
+		end
+	end
+
+	TriggerClientEvent("Fire-Alarm:Bouce:UpdateValues", -1, Server)
+	TriggerClientEvent("Fire-Alarm:Return:StartWalkAround", -1, CallPoint)
+end)
+
+-- Reset all Pull Stations for a specifc panel
 RegisterServerEvent("Fire-Alarm:ResetAllCalls")
-AddEventHandler("Fire-Alarm:ResetAllCalls", function(Panel)
-	-- Loop through all call points
-	for _, Point in ipairs(Server.CallPoints) do
-		-- If call point belongs to the same control panel as the pulled call point
-		if Point.Control == Panel then
-			-- Unset pulled
-			Point.Pulled = false
+AddEventHandler("Fire-Alarm:ResetAllCalls", function(PanelID)
+	Server.ControlPanels[PanelID].Active = false
+
+	for _, Channel in ipairs(Server.CallPoints) do
+		for _, Point in ipairs(Channel.Devices) do
+			-- If call point belongs to the control panel
+			if Point.Control == PanelID then
+				-- Unset pulled
+				Point.Pulled = false
+			end
 		end
 	end
+
 	TriggerClientEvent("Fire-Alarm:Bouce:UpdateCallPoints", -1, Server.CallPoints)
 end)
 
--- Reset alarm (bounce)
+RegisterServerEvent("Fire-Panel:ResetWalkTest")
+AddEventHandler("Fire-Panel:ResetWalkTest", function(PanelID)
+	Server.ControlPanels[PanelID].Active = false
+
+	for _, Channel in ipairs(Server.CallPoints) do
+		for _, Point in ipairs(Channel.Devices) do
+			-- If call point belongs to the same control panel as the pulled call point
+			if Point.Control == PanelID then
+				-- Unset pulled
+				Point.Pulled = false
+			end
+		end
+	end
+
+	TriggerClientEvent("Fire-Alarm:Bouce:UpdateValues", -1, Server)
+end)
+
+-- Reset alarm on all clients
 RegisterServerEvent("Fire-Alarm:ResetAlarm")
-AddEventHandler("Fire-Alarm:ResetAlarm", function()
-	-- Bounce to all clients
-    TriggerClientEvent("Fire-Alarm:Return:ResetAlarm", -1)
+AddEventHandler("Fire-Alarm:ResetAlarm", function(ID)
+	TriggerClientEvent("Fire-Alarm:Bouce:ResetAlarm", -1, ID)
 end)
 
 -- Add code to current code
 RegisterServerEvent("Fire-Panel:AddCode")
-AddEventHandler("Fire-Panel:AddCode", function(CP, Code)
-	-- If number of numbers entered is less than 4
-	if #Server.ControlPanels[CP].CurrentCode < 4 then
-		-- Add number to entered codes
-		table.insert(Server.ControlPanels[CP].CurrentCode, Code)
-		-- Bounce back to client
-		TriggerClientEvent("Fire-Panel:Return:AddCode", source)
+AddEventHandler("Fire-Panel:AddCode", function(PanelID, Code)
+	-- If number of numbers entered is less than 3
+	if #Server.ControlPanels[PanelID].CurrentCode < 3 then
+		table.insert(Server.ControlPanels[PanelID].CurrentCode, Code)
+		TriggerClientEvent("Fire-Panel:Return:AddCode", source, #Server.ControlPanels[PanelID].CurrentCode)
 	end
 end)
 
 -- Remove last entered code
 RegisterServerEvent("Fire-Panel:RemoveCode")
-AddEventHandler("Fire-Panel:RemoveCode", function(CP)
+AddEventHandler("Fire-Panel:RemoveCode", function(PanelID)
 	-- If there is a last entered code
-	if #Server.ControlPanels[CP].CurrentCode > 0 then
-		-- Remove last entered code
-		table.remove(Server.ControlPanels[CP].CurrentCode, #Server.ControlPanels[CP].CurrentCode)
-		-- Bounce back to client
-		TriggerClientEvent("Fire-Panel:Return:RemoveCode", source)
+	if #Server.ControlPanels[PanelID].CurrentCode > 0 then
+		table.remove(Server.ControlPanels[PanelID].CurrentCode, #Server.ControlPanels[PanelID].CurrentCode)
+		TriggerClientEvent("Fire-Panel:Return:RemoveCode", source, #Server.ControlPanels[PanelID].CurrentCode)
 	end
 end)
 
 -- Check entered code against server code
 RegisterServerEvent("Fire-Panel:CheckCode")
-AddEventHandler("Fire-Panel:CheckCode", function(CP)
-	-- Temporary variable
+AddEventHandler("Fire-Panel:CheckCode", function(PanelID)
 	local Success = false
-	-- If the entered code equals the panel's code
-	if table.concat(Server.ControlPanels[CP].CurrentCode, "") == Server.ControlPanels[CP].Passcode then
-		-- Update temporary variable
-		Success = true
-	end
+
+	-- If the entered code equals the server code, update temporary variable
+	if table.concat(Server.ControlPanels[PanelID].CurrentCode, "") == Server.ControlPanels[PanelID].Passcode then Success = true end
 
 	-- Reset entered code regardless
-	Server.ControlPanels[CP].CurrentCode = {}
-	-- Return to client
+	Server.ControlPanels[PanelID].CurrentCode = {}
+
 	TriggerClientEvent("Fire-Panel:Return:CheckCode", source, Success)
 end)
 
--- Panel usage requested by client
+-- Panel requested by client
 RegisterServerEvent("Fire-Panel:OpenPanel")
 AddEventHandler("Fire-Panel:OpenPanel", function(Panel)
-	-- Return current screen
-	TriggerClientEvent("Fire-Panel:Return:OpenPanel", source, Server.ControlPanels[Panel.ID])
-	-- Bouce to all clients
-	TriggerClientEvent("Fire-Panel:InUse", -1)
-end)
+	Server.ControlPanels[Panel.ID].Open = true
 
--- Panel no longer needed by client
-RegisterServerEvent("Fire-Panel:ClosePanel")
-AddEventHandler("Fire-Panel:ClosePanel", function()
-	-- Bouce to all clients
-    TriggerClientEvent("Fire-Panel:OutOfUse", -1)
+	TriggerClientEvent("Fire-Alarm:Bouce:UpdateValues", -1, Server)
+	TriggerClientEvent("Fire-Panel:Return:OpenPanel", source, Server.ControlPanels[Panel.ID])
 end)
 
 -- Set panel screen
 RegisterServerEvent("Fire-Panel:SetScreen")
-AddEventHandler("Fire-Panel:SetScreen", function(Panel, Screen)
-	-- Update panel screen
-	Server.ControlPanels[Panel].CurrentScreen = Screen
+AddEventHandler("Fire-Panel:SetScreen", function(PanelID, Screen, Text)
+	Server.ControlPanels[PanelID].CurrentScreen = Screen
+	Server.ControlPanels[PanelID].ScreenText = Text
 end)
 
--- Play annoucement
+-- Set panel access level
+RegisterServerEvent("Fire-Panel:SetAccessLevel")
+AddEventHandler("Fire-Panel:SetAccessLevel", function(PanelID, Level)
+	Server.ControlPanels[PanelID].AccessLevel = Level
+
+	TriggerClientEvent("Fire-Alarm:Bouce:UpdateValues", -1, Server)
+end)
+
+-- Set panel in walk around mode
+RegisterServerEvent("Fire-Panel:SetWalkAround")
+AddEventHandler("Fire-Panel:SetWalkAround", function(PanelID, WalkAround)
+	Server.ControlPanels[PanelID].WalkAround = WalkAround
+
+	TriggerClientEvent("Fire-Alarm:Bouce:UpdateValues", -1, Server)
+end)
+
+-- Play annoucement on all clients
 RegisterServerEvent("Fire-Panel:Ann")
 AddEventHandler("Fire-Panel:Ann", function(Ann, Panel)
-	-- Bounce to all clients
-	TriggerClientEvent("Fire-Panel:Return:Ann", -1, Ann, Server.ControlPanels[Panel])
+	TriggerClientEvent("Fire-Panel:Return:Ann", -1, Ann, Panel)
+end)
+
+-- Update all client values
+RegisterServerEvent("Fire-Panel:UpdateAllClients")
+AddEventHandler("Fire-Panel:UpdateAllClients", function(FirePanel)
+	Server.CallPoints = FirePanel.CallPoints
+	Server.ControlPanels = FirePanel.ControlPanels
+
+	TriggerClientEvent("Fire-Alarm:Bouce:UpdateValues", -1, Server)
 end)

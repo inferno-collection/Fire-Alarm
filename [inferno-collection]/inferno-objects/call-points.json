@@ -1,105 +1,143 @@
 [
     {
-        "ID"        :   1,
-        "Prop"      :   "hei_prop_bank_alarm_01",
-        "x"         :   434.95,
-        "y"         :   -985.2,
-        "z"         :   30.9,
-        "rx"        :   0,
-        "ry"        :   0,
-        "rz"        :   90,
-        "Control"   :   1,
-        "_comment"  :   "Mission Row: Located next to main front door"
+        "Channel"   :   1,
+        "Location"  :   "Mission Row Police Station",
+        "Devices"   :   [
+            {
+                "ID"        :   1,
+                "Prop"      :   "hei_prop_bank_alarm_01",
+                "x"         :   434.95,
+                "y"         :   -985.2,
+                "z"         :   30.9,
+                "rx"        :   0,
+                "ry"        :   0,
+                "rz"        :   90,
+                "Control"   :   1,
+                "Location"  :   "Next to main front door"
+            },
+
+            {
+                "ID"        :   2,
+                "Prop"      :   "hei_prop_bank_alarm_01",
+                "x"         :   449.89,
+                "y"         :   -984.9,
+                "z"         :   30.9,
+                "rx"        :   0,
+                "ry"        :   0,
+                "rz"        :   270,
+                "Control"   :   1,
+                "Location"  :   "Near armory door"
+            },
+            
+            {
+                "ID"        :   3,
+                "Prop"      :   "hei_prop_bank_alarm_01",
+                "x"         :   439.345,
+                "y"         :   -996.5,
+                "z"         :   30.9,
+                "rx"        :   0,
+                "ry"        :   0,
+                "rz"        :   180,
+                "Control"   :   1,
+                "Location"  :   "Inside briefing room"
+            },
+
+            {
+                "ID"        :   4,
+                "Prop"      :   "hei_prop_bank_alarm_01",
+                "x"         :   460.76,
+                "y"         :   -988.44,
+                "z"         :   30.9,
+                "rx"        :   0,
+                "ry"        :   0,
+                "rz"        :   270,
+                "Control"   :   1,
+                "Location"  :   "Inside locker room"
+            },
+
+            {
+                "ID"        :   5,
+                "Prop"      :   "hei_prop_bank_alarm_01",
+                "x"         :   462.29,
+                "y"         :   -984.27,
+                "z"         :   30.9,
+                "rx"        :   0,
+                "ry"        :   0,
+                "rz"        :   0,
+                "Control"   :   1,
+                "Location"  :   "Inside stairwell level 1"
+            },
+
+            {
+                "ID"        :   6,
+                "Prop"      :   "hei_prop_bank_alarm_01",
+                "x"         :   465.68,
+                "y"         :   -981.68,
+                "z"         :   43.69,
+                "rx"        :   0,
+                "ry"        :   0,
+                "rz"        :   0,
+                "Control"   :   1,
+                "Location"  :   "Inside stairwell roof level"
+            },
+
+            {
+                "ID"        :   7,
+                "Prop"      :   "hei_prop_bank_alarm_01",
+                "x"         :   455.85,
+                "y"         :   -986.49,
+                "z"         :   26.9,
+                "rx"        :   0,
+                "ry"        :   0,
+                "rz"        :   180,
+                "Control"   :   1,
+                "Location"  :   "Near fire panel and stairs"
+            },
+
+            {
+                "ID"        :   8,
+                "Prop"      :   "hei_prop_bank_alarm_01",
+                "x"         :   462.575,
+                "y"         :   -987.5,
+                "z"         :   25.2,
+                "rx"        :   0,
+                "ry"        :   0,
+                "rz"        :   0,
+                "Control"   :   1,
+                "Location"  :   "Near fire panel and cells"
+            }
+        ]
     },
 
     {
-        "ID"        :   2,
-        "Prop"      :   "hei_prop_bank_alarm_01",
-        "x"         :   449.89,
-        "y"         :   -984.9,
-        "z"         :   30.9,
-        "rx"        :   0,
-        "ry"        :   0,
-        "rz"        :   270,
-        "Control"   :   1,
-        "_comment"  :   "Mission Row: Located near armory door"
-    },
-    
-    {
-        "ID"        :   3,
-        "Prop"      :   "hei_prop_bank_alarm_01",
-        "x"         :   439.345,
-        "y"         :   -996.5,
-        "z"         :   30.9,
-        "rx"        :   0,
-        "ry"        :   0,
-        "rz"        :   180,
-        "Control"   :   1,
-        "_comment"  :   "Mission Row: Located inside briefing room"
-    },
+        "Channel"   :   1,
+        "Location"  :   "Maze Bank Arena",
+        "Devices"   :   [
+            {
+                "ID"        :   1,
+                "Prop"      :   "hei_prop_bank_alarm_01",
+                "x"         :   -249.85,
+                "y"         :   -2020,
+                "z"         :   30.15,
+                "rx"        :   0,
+                "ry"        :   0,
+                "rz"        :   235,
+                "Control"   :   2,
+                "Location"  :   "Left of main entry"
+            },
 
-    {
-        "ID"        :   4,
-        "Prop"      :   "hei_prop_bank_alarm_01",
-        "x"         :   460.76,
-        "y"         :   -988.44,
-        "z"         :   30.9,
-        "rx"        :   0,
-        "ry"        :   0,
-        "rz"        :   270,
-        "Control"   :   1,
-        "_comment"  :   "Mission Row: Located inside locker room"
-    },
-
-    {
-        "ID"        :   5,
-        "Prop"      :   "hei_prop_bank_alarm_01",
-        "x"         :   462.29,
-        "y"         :   -984.27,
-        "z"         :   30.9,
-        "rx"        :   0,
-        "ry"        :   0,
-        "rz"        :   0,
-        "Control"   :   1,
-        "_comment"  :   "Mission Row: Located inside stairwell level 1"
-    },
-
-    {
-        "ID"        :   6,
-        "Prop"      :   "hei_prop_bank_alarm_01",
-        "x"         :   465.68,
-        "y"         :   -981.68,
-        "z"         :   43.69,
-        "rx"        :   0,
-        "ry"        :   0,
-        "rz"        :   0,
-        "Control"   :   1,
-        "_comment"  :   "Mission Row: Located inside stairwell roof level"
-    },
-
-    {
-        "ID"        :   7,
-        "Prop"      :   "hei_prop_bank_alarm_01",
-        "x"         :   455.85,
-        "y"         :   -986.49,
-        "z"         :   26.9,
-        "rx"        :   0,
-        "ry"        :   0,
-        "rz"        :   180,
-        "Control"   :   1,
-        "_comment"  :   "Mission Row: Located near fire panel and stairs"
-    }
-
-    {
-        "ID"        :   8,
-        "Prop"      :   "hei_prop_bank_alarm_01",
-        "x"         :   462.575,
-        "y"         :   -987.5,
-        "z"         :   25.2,
-        "rx"        :   0,
-        "ry"        :   0,
-        "rz"        :   0,
-        "Control"   :   1,
-        "_comment"  :   "Mission Row: Located near fire panel and cells"
+            {
+                "ID"        :   2,
+                "Prop"      :   "hei_prop_bank_alarm_01",
+                "x"         :   -260.80,
+                "y"         :   -2033.05,
+                "z"         :   30.15,
+                "rx"        :   0,
+                "ry"        :   0,
+                "rz"        :   220,
+                "Control"   :   2,
+                "Location"  :   "Right of main entry"
+            }
+        ]
     }
 ]

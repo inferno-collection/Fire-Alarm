@@ -1,12 +1,35 @@
 [
     {
-        "ID"    :   1,
-        "Prop"  :   "prop_elecbox_13",
-        "x"     :   465.45,
-        "y"     :   -985.3,
-        "z"     :   24.5,
-        "rx"    :   0,
-        "ry"    :   0,
-        "rz"    :   270
+        "ID"        :   1,
+        "Prop"      :   "prop_elecbox_13",
+        "x"         :   465.45,
+        "y"         :   -985.3,
+        "z"         :   24.5,
+        "rx"        :   0,
+        "ry"        :   0,
+        "rz"        :   270,
+        "Passcode"  :   "333",
+        "AlarmTones":   [
+            "fire",
+            "rescue"
+        ],
+		"_comment"  :   "Mission Row: Located near cells downstairs"
+    },
+
+    {
+        "ID"        :   2,
+        "Prop"      :   "prop_elecbox_13",
+        "x"         :   -244.35,
+        "y"         :   -1995.71,
+        "z"         :   24.75,
+        "rx"        :   0,
+        "ry"        :   0,
+        "rz"        :   78,
+        "Passcode"  :   "333",
+        "AlarmTones":   [
+            "fire",
+            "rescue"
+        ],
+		"_comment"  :   "Maze Bank Arena: Located at bottom of stairwell B downstairs"
     }
 ]

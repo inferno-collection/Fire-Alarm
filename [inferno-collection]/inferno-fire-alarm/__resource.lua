@@ -1,4 +1,4 @@
--- Inferno Collection Fire Alarm Version 4.5 BETA
+-- Inferno Collection Fire Alarm Version 4.6 ALPHA
 --
 -- Copyright (c) 2019, Christopher M, Inferno Collection. All rights reserved.
 --
@@ -14,7 +14,7 @@ resource_manifest_version "77731fab-63ca-442c-a67b-abc70f28dfa5"
 -- Client Script
 client_script "client.lua"
 
--- Server Scripts
+-- Server Script
 server_script "server.lua"
 
 -- NUI Page
@@ -25,24 +25,44 @@ files {
     "call-points.json",
     "control-panels.json",
     "html/index.html",
-    "html/sounds/all_clear.ogg",
-    "html/sounds/test.ogg",
+    "html/sounds/clear.mp3",
+    "html/sounds/test0.mp3",
+    "html/sounds/test1.mp3",
+    "html/sounds/test2.mp3",
+    "html/sounds/test3.mp3",
     "html/sounds/alarm.mp3",
-    "html/sounds/panelsounder.ogg",
-    "html/imgs/ack1.png",
+    "html/sounds/panelsounder.mp3",
+    "html/sounds/0.mp3",
+    "html/sounds/1.mp3",
+    "html/sounds/2.mp3",
+    "html/sounds/3.mp3",
+    "html/sounds/4.mp3",
+    "html/sounds/5.mp3",
+    "html/sounds/6.mp3",
+    "html/sounds/7.mp3",
+    "html/sounds/8.mp3",
+    "html/sounds/9.mp3",
+    "html/sounds/testing_channel.mp3",
+    "html/sounds/device.mp3",
+    "html/sounds/beep.mp3",
+    "html/imgs/access.png",
+    "html/imgs/ack.png",
     "html/imgs/fire.png",
     "html/imgs/gack.png",
     "html/imgs/menu1.png",
     "html/imgs/menu2.png",
     "html/imgs/menu3.png",
     "html/imgs/menu4.png",
+    "html/imgs/passcode.png",
     "html/imgs/res.png",
     "html/imgs/resc.png",
     "html/imgs/sil.png",
     "html/imgs/sysnormal.png",
-    "html/imgs/locked.png",
-    "html/imgs/1.png",
-    "html/imgs/2.png",
-    "html/imgs/3.png",
-    "html/imgs/4.png"
+    "html/imgs/walktest.png",
+    "html/imgs/walktestupdating.png",
+    "html/imgs/walktestcomplete.png",
+    "html/BPdotsBold.eot",
+    "html/BPdotsBold.svg",
+    "html/BPdotsBold.ttf",
+    "html/BPdotsBold.woff"
 }

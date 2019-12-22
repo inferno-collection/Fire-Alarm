@@ -1,4 +1,4 @@
--- Inferno Collection Fire Alarm Version 4.5 BETA
+-- Inferno Collection Fire Alarm Version 4.6 ALPHA
 --
 -- Copyright (c) 2019, Christopher M, Inferno Collection. All rights reserved.
 --
@@ -57,49 +57,74 @@ RegisterCommand("objects", function()
         NewNoti("~r~Unable to load call-points.json. Press F8 for details.", true)
     end
 
-    -- Loop though all the panels
-	for _, Panel in ipairs(ControlPanels) do
-		-- Attempt to create a new panel
-        local NewControlPanel = CreateObjectNoOffset(GetHashKey(Panel.Prop), vector3(Panel.x, Panel.y, Panel.z), false, false, false)
-        -- Add new panel into array for later
-        table.insert(Objects.ControlPanels, NewControlPanel)
+    -- Loop though all channels
+	for _, Channel in ipairs(CallPoints) do
+		-- Loop though all call points
+		for _, Object in ipairs(Channel.Devices) do
+			-- Check if there is an object
+			if Object.Prop ~= nil then
+				-- Attempt to create a new object
+                local NewObject = CreateObjectNoOffset(GetHashKey(Object.Prop), vector3(Object.x, Object.y, Object.z), false, false, false)
 
-		-- If successful in creating new call points
-        if NewControlPanel then
-            -- Set object rotation
-            SetEntityRotation(NewControlPanel, vector3(Panel.rx, Panel.ry, Panel.rz), 2, true)
-            -- Freeze object in place
-            FreezeEntityPosition(NewControlPanel, true)
-        -- If unable to create object
-        else
-            -- Print error to console
-            print("Error creating control panel number " .. Panel.ID)
-            -- Inform User
-            NewNoti("~r~Error creating control panel number " .. Panel.ID, true)
+                table.insert(Objects.CallPoints, NewObject)
+
+				-- If able to create object
+				if NewObject then
+					-- Update object rotation
+					SetEntityRotation(NewObject, vector3(Object.rx, Object.ry, Object.rz), 2, true)
+					-- Freeze object in place
+					FreezeEntityPosition(NewObject, true)
+				-- If unable to create object
+				else
+					print("===================================================================")
+					print("=============================ATTENTION=============================")
+					print("Unable to create call point for Inferno-Objects. Call point number:")
+					print(Object.ID .. " - This is non-fatal warn.")
+					print("===================================================================")
+				end
+			-- If there is no object
+			else
+				print("===================================================================")
+				print("==============================Warning==============================")
+				print("No prop found for a call point in Inferno-Objects. Call point")
+				print("number: " .. Object.ID .. " - This is non-fatal warn.")
+				print("===================================================================")
+			end
 		end
 	end
 
-    -- Loop though all the call points
-	for _, CallPoint in ipairs(CallPoints) do
-		-- Attempt to create a new call points
-        local NewCallPoint = CreateObjectNoOffset(GetHashKey(CallPoint.Prop), vector3(CallPoint.x, CallPoint.y, CallPoint.z), false, false, false)
-        -- Add new panel into array for later
-        table.insert(Objects.CallPoints, NewCallPoint)
+	-- Loop though all call points
+	for _, Object in ipairs(ControlPanels) do
+		-- Check if there is an object
+		if Object.Prop ~= nil then
+			-- Attempt to create a new object
+            local NewObject = CreateObjectNoOffset(GetHashKey(Object.Prop), vector3(Object.x, Object.y, Object.z), false, false, false)
 
-		-- If successful in creating new call points
-        if NewCallPoint then
-             -- Set object rotation
-            SetEntityRotation(NewCallPoint, vector3(CallPoint.rx, CallPoint.ry, CallPoint.rz), 2, true)
-            -- Freeze object in place
-            FreezeEntityPosition(NewCallPoint, true)
-        -- If unable to create object
-        else
-            -- Print error to console
-            print("Error creating call point number " .. CallPoint.ID)
-            -- Inform User
-            NewNoti("~r~Error creating call point number " .. CallPoint.ID, true)
+            table.insert(Objects.ControlPanels, NewObject)
+
+			-- If able to create object
+			if NewObject then
+				-- Update object rotation
+				SetEntityRotation(NewObject, vector3(Object.rx, Object.ry, Object.rz), 2, true)
+				-- Freeze object in place
+				FreezeEntityPosition(NewObject, true)
+			-- If unable to create object
+			else
+				print("===================================================================")
+				print("=============================ATTENTION=============================")
+				print("Unable to create control panel for Inferno-Objects. Control panel")
+				print("number: " .. Object.ID .. " - This is non-fatal warn.")
+				print("===================================================================")
+			end
+		-- If there is no object
+		else
+			print("===================================================================")
+			print("==============================Warning==============================")
+			print("No prop found for a control panel in Inferno-Objects. Control panel")
+			print("number: " .. Object.ID .. " - This is non-fatal warn.")
+			print("===================================================================")
 		end
-    end
+	end
     -- Remind user to clear array
     NewNoti("~g~Remember to run /delobjects before restarting script!", true)
 end)
