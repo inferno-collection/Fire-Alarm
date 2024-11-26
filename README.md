@@ -3,6 +3,9 @@
 ***
 
 ![channels4_banner|690x114](https://i.ibb.co/CHMD8y6/channels4-banner.jpg) 
+
+# This resource has been replaced by [Inferno Fire Alarm Reborn](https://inferno.gay/fire-alarm/docs)
+
 # Inferno Collection: Fire Alarm
 [![Build Status](https://travis-ci.com/inferno-collection/Fire-Alarm.svg?branch=master)](https://travis-ci.com/inferno-collection/Fire-Alarm)
 
