@@ -7,13 +7,14 @@
 # This resource has been replaced by [Inferno Fire Alarm Reborn](https://inferno.gay/fire-alarm/docs)
 
 # Inferno Collection: Fire Alarm
-[![Build Status](https://travis-ci.com/inferno-collection/Fire-Alarm.svg?branch=master)](https://travis-ci.com/inferno-collection/Fire-Alarm)
 
 __Public Beta Version 4.5__
 
 The Fire Alarm resource adds both fire alarms, manual call-points/pull-stations, and fire control pannels into your server. By default, the resource comes with one location, the Mission Row police station, which contains a handfull of call-points, and a control-panel, however, the resource allows and encourages you to add more, though easy to use JSON files.
 
 The call-points and control panel consist of non-networked objects, with each control panel having an openable NUI. From the NUI, the player has access to menu options; when the fire alarm for that building has been activated, the player has the ability to silence the sounders, and/or reset the alarm for the building.
+
+<a href="https://www.buymeacoffee.com/inferno_collection" target="_blank"><img width="245" height="45" alt="fire_truk" src="https://inferno-collection.com/img/fire_truk.png" /></a>
 
 Presently, the following can be customized:
 - Location of manual call-points and control panels.
@@ -58,5 +59,4 @@ Thank you to our Alpha Testers, and their respective servers and players, for te
 > The Inferno Collection Team
 * @ChristopherM
 * @Scott_UK 
-***
-Interested in keeping up-to-date with what we are working on? [Check out our roadmap](https://inferno-collection.com/roadmap).
+
